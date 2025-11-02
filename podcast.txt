@@ -1,0 +1,30 @@
+Hello and welcome to The Generative AI Group Digest for the week of 26 Oct 2025!
+We're Alex and Maya.
+
+This week's thread was a full buffet - throttles, browsers that act like assistants, voice-agent latency puzzles, and an argument about whether pixels beat text. Let's jump in.
+
+First up - Claude limits and weird token behavior. Lots of people - Ashwin Doraisamy, Somya Mishra, Anshul and others - reported Claude Pro feeling much more constrained than GPT or Gemini. Ashwin said there's throttling on session resets and conversation length - that it "runs out" faster.
+
+Right. For non-technical listeners: session reset throttling means the service cuts or limits long-running conversations or sessions, and conversation-length limits mean you hit a cap on how much context the model will keep. Practically, that looks like sudden stops, forced restarts, or extra token usage.
+
+Why it matters: if your workflow depends on long back-and-forths - pair programming, multi-step reasoning, or agentic loops - a model that drops context or resets often will cost you time, money, and glue code to stitch things back together.
+
+Non-obvious takeaway: don't assume one model's billing or UX maps to another. Folks like Nishanth canceled higher tiers because the limits didn't match expectations. If you're experimenting, monitor session and conversation resets closely, and build your app to tolerate or checkpoint across them.
+
+And a quick practical idea: add explicit system instructions that limit verbose formatting. Sushanth Bodapati flagged Claude Sonnet 4.5 suddenly inserting extra Markdown summaries after edits - he suspects it's a subtle system-prompt change. If a model keeps adding boilerplate, explicitly tell it "no automatic summaries, limit outputs to X lines" and enforce that in your SDK wrapper.
+
+Also a tiny ops note from the thread - when connecting Amazon Bedrock to Cursor, D2 pointed out you may need the cross-region inference profile and an exact model id like us.anthropic.claude-sonnet-4-5-20250929-v1:0. Small config fixes save a lot of head-scratching.
+
+Next big theme: AI browsers and the Atlas launch. There was a lot of back-and-forth - Ashish, Anubhav Mishra, Atishay and others tried Atlas and compared it to Comet, Dia, Perplexity. Reactions: powerful concept, but slow and sometimes unpredictable. Ashish described asking Atlas to compile research from a Twitter hashtag, and it started using Canva out of nowhere - useful, but odd.
+
+In plain terms: an "agentic browser" is a browser mode that can act for you - click, extract, fill forms, use apps - instead of just showing pages. The upside is automation of repetitive admin work; the downside we heard over and over is latency, security concerns, and UX rough edges.
+
+Why it matters: these browsers could replace a lot of repetitive tasks - research, data extraction, dashboards - but enterprise adoption will hinge on speed, reliability, and trust. Atishay's experience: Atlas could do what he wanted, but it was 3-4x slower than doing it yourself. That kills productivity for short tasks.
+
+Non-obvious takeaways: 1) Use agentic browsers for long, boring workflows where time-to-complete doesn't need to be fast - deep research or batch admin tasks. 2) Train the agent: if a browser lets you show it how you like things done, that pays off on repeat jobs. 3) Be careful with credentials and payment features - Anubhav noticed an "add payment" option which hints at future automated purchases. Don't hand over sensitive accounts until you're sure of the security model.
+
+Tools and names to keep in mind: ChatGPT Atlas, Comet/Perplexity, Dia, Brave's efforts, and integration patterns like browserbase or persistence logins. Simon Willison and Logan's posts were referenced if you want deeper reading.
+
+Moving on: DSPy, rate limits, and model choices for folks experimenting. Ajay shared putting sleep commands in DSPy BaseLM to blunt rate limits. R suggested self-hosting until you know your experiment will give ROI - Ollama was named as an easy integration for local models.
+
+That is all for now! Take care!
