@@ -1,4 +1,47 @@
-# OpenAI TTS costs
+# TTS costs
+
+## 19 Dec 2025
+
+I've ranked TTS models by value for money (in my opinion) when reading this 4K character [podcast](podcast.txt).
+
+| Rank | Model                              | Cost $ | Audio (s) | Time (s) | $ / hour | $ / MChars | $ / MTok |      Tokens |
+| ---: | ---------------------------------- | -----: | --------: | -------: | -------: | ---------: | -------: | ----------: |
+|    1 | [gemini-2.5-flash-preview-tts][O1] | 0.0609 |       242 |       95 |    0.906 |       14.9 |     10.0 | 918 + 6,046 |
+|    2 | [gemini-2.5-pro-preview-tts][O2]   | 0.1480 |       294 |      203 |    1.812 |       36.1 |     20.0 | 918 + 7,352 |
+|    3 | [gpt-4o-mini-tts-2025-12-15][O3]   | 0.0612 |       253 |       46 |    0.871 |       14.9 |     69.8 |             |
+|    4 | [gpt-4o-mini-tts][O4]              | 0.0652 |       268 |       46 |    0.876 |       15.9 |     74.4 |             |
+|    5 | [tts-1][O5]                        | 0.0614 |       256 |       44 |    0.864 |       15.0 |     70.0 |             |
+|    6 | [tts-1-hd][O6]                     | 0.1228 |       257 |       62 |    1.728 |       30.0 |    140.0 |             |
+
+[O1]: gemini-2.5-flash-preview-tts.opus
+[O2]: gemini-2.5-pro-preview-tts.opus
+[O3]: gpt-4o-mini-tts-2025-12-15.opus
+[O4]: gpt-4o-mini-tts.opus
+[O5]: tts-1.opus
+[O6]: tts-1-hd.opus
+
+I like the `algieba` (male) / `kore` (female) [Gemini voices](https://docs.cloud.google.com/text-to-speech/docs/gemini-tts#voice_options)
+`ash` (male) / `nova` (female) [OpenAI voices](https://platform.openai.com/docs/guides/text-to-speech#voice-options).
+
+For the Gemini TTS models, I used this request:
+
+```bash
+curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent" \
+  -H "x-goog-api-key: $GEMINI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg text "$(cat podcast.txt)" '{
+    "contents": [{"role": "user", "parts": [{"text": $text}]}],
+    "generationConfig": {
+      "responseModalities": ["audio"],
+      "speech_config": {"voice_config": {"prebuilt_voice_config": {"voice_name": "Kore"}}}
+    }
+  }')" \
+  --output gemini-2.5-flash-preview-tts.json
+jq -r '.candidates[0].content.parts[0].inlineData.data' gemini-2.5-flash-preview-tts.json | base64 --decode > gemini-2.5-flash-preview-tts.pcm
+ffmpeg -f s16le -ar 24000 -ac 1 -i gemini-2.5-flash-preview-tts.pcm gemini-2.5-flash-preview-tts.wav
+```
+
+## 2 Nov 2025
 
 The OpenAI [text-to-speech](https://platform.openai.com/docs/guides/text-to-speech) cost documentation is confusing.
 
